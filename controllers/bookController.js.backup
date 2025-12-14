@@ -1,0 +1,52 @@
+const pool = require('../db');
+
+// Get all books
+const getAllBooks = async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM books ORDER BY title");
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Books error:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+};
+
+// Get single book
+const getBookById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query("SELECT * FROM books WHERE id = $1", [id]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Book error:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
+};
+
+// Create book (admin only - placeholder)
+const createBook = async (req, res) => {
+  res.json({ message: 'Create book - admin only feature' });
+};
+
+// Update book (admin only - placeholder)
+const updateBook = async (req, res) => {
+  res.json({ message: 'Update book - admin only feature' });
+};
+
+// Delete book (admin only - placeholder)
+const deleteBook = async (req, res) => {
+  res.json({ message: 'Delete book - admin only feature' });
+};
+
+module.exports = {
+  getAllBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook
+};
